@@ -1,3 +1,4 @@
 
 Guest: yvette, Room type: doubleRoom, Nights: 3, Booking number: 936, Arrival: 2024-10-28, Departure: 2024-10-31
 Guest: Treasure, Room type: doubleRoom, Nights: 3, Booking number: 484, Arrival: 2024-10-28, Departure: 2024-10-31
+Guest: ojong, Room type: singleRoom, Nights: 3, Booking number: 607, Arrival: 2024-11-02, Departure: 2024-11-05
