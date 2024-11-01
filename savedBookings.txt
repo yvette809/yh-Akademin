@@ -1,0 +1,5 @@
+yvetteyvetteGuest: Adel, Room type: singleRoom, Nights: 5, Booking number: 848
+Guest: Eliora, Room type: single, Nights: 4, Booking number: 301
+Guest: stefan, Room type: doubleRoom, Nights: 2, Booking number: 247
+Guest: yve, Room type: singleRoom, Nights: 6, Booking number: 797
+Guest: yvette, Room type: queenRoom, Nights: 7, Booking number: 952
