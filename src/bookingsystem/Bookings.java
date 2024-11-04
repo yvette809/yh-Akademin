@@ -330,7 +330,7 @@ public class Bookings {
 
 	
 		    
-		    public static void searchAvailableRooms() {
+		   /* public static void searchAvailableRooms() {
 		        Scanner scanner = new Scanner(System.in);
 		        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -371,6 +371,97 @@ public class Bookings {
 		            }
 		        }
 		    }
+*/
+	 
+	 public static void searchAvailableRooms() {
+	        Scanner scanner = new Scanner(System.in);
+	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+	        // Prompt user for desired arrival date and number of nights
+	        System.out.println("Enter desired arrival date (format yyyy-MM-dd):");
+	        String dateInput = scanner.nextLine();
+	        LocalDate requestedArrivalDate;
 
+	        try {
+	            requestedArrivalDate = LocalDate.parse(dateInput, dateFormatter);
+	        } catch (Exception e) {
+	            System.out.println("Invalid date format. Please try again.");
+	            return;
+	        }
+
+	        System.out.println("Enter number of nights:");
+	        int requestedNights = scanner.nextInt();
+	        scanner.nextLine(); // Clear newline character after nextInt()
+
+	        LocalDate requestedDepartureDate = requestedArrivalDate.plusDays(requestedNights);
+
+	        // Map to store available room counts by type
+	        Map<String, Integer> availableRooms = new HashMap<>();
+
+	        try {
+	            File myFile = new File("src/bookingsystem/savedBookings.txt");
+
+	            // Check if the file is empty
+	            if (myFile.length() == 0) {
+	                System.out.println("There are no bookings in the hotel.");
+	                return;
+	            }
+
+	            Scanner fileScanner = new Scanner(myFile);
+
+	            // Loop through each line in the file
+	            while (fileScanner.hasNextLine()) {
+	                String line = fileScanner.nextLine().trim();
+
+	                // Skip empty lines
+	                if (line.isEmpty()) continue;
+
+	                // Attempt to parse the line
+	                try {
+	                    // Parse room type
+	                    String roomType = line.contains("Room type: ") ? line.split("Room type: ")[1].split(",")[0].trim() : null;
+	                    
+	                    // Parse arrival date
+	                    String arrivalDateStr = line.contains("Arrival: ") ? line.split("Arrival: ")[1].split(",")[0].trim() : null;
+	                    LocalDate arrivalDate = arrivalDateStr != null ? LocalDate.parse(arrivalDateStr, dateFormatter) : null;
+	                    
+	                    // Parse departure date
+	                    String departureDateStr = line.contains("Departure: ") ? line.split("Departure: ")[1].trim() : null;
+	                    LocalDate departureDate = departureDateStr != null ? LocalDate.parse(departureDateStr, dateFormatter) : null;
+
+	                    // If any field is missing, skip this line
+	                    if (roomType == null || arrivalDate == null || departureDate == null) {
+	                        System.out.println("Invalid line format, skipping: " + line);
+	                        continue;
+	                    }
+
+	                    // Check if the room is available for the requested dates
+	                    if (requestedDepartureDate.isBefore(arrivalDate) || requestedArrivalDate.isAfter(departureDate)) {
+	                        // Increment the room count in the map
+	                        availableRooms.put(roomType, availableRooms.getOrDefault(roomType, 0) + 1);
+	                    }
+
+	                } catch (Exception e) {
+	                    System.out.println("Error parsing line, skipping: " + line);
+	                    e.printStackTrace();
+	                }
+	            }
+
+	            fileScanner.close();
+
+	            // Display available rooms to the user
+	            if (availableRooms.isEmpty()) {
+	                System.out.println("No rooms available for the selected dates.");
+	            } else {
+	                System.out.println("Available rooms for the period " + requestedArrivalDate + " to " + requestedDepartureDate + ":");
+	                for (Map.Entry<String, Integer> entry : availableRooms.entrySet()) {
+	                    System.out.println("- " + entry.getKey() + ": " + entry.getValue() + " available");
+	                }
+	            }
+
+	        } catch (IOException e) {
+	            System.out.println("An error occurred while reading the booking file.");
+	            e.printStackTrace();
+	        }
+	    }
 }
